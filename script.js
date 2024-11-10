@@ -2,26 +2,21 @@ const videoElement = document.getElementById('inputVideo');
 const canvasElement = document.getElementById('outputCanvas');
 const canvasCtx = canvasElement.getContext('2d');
 
-// Set the size of the canvas to 3840x2160
 canvasElement.width = 1920;
 canvasElement.height = 1080;
 
-// Function to draw a box inside the canvas
 function drawBox() {
     const boxWidth = 640;
     const boxHeight = 480;
 
-    // Calculate the position of the box (centered inside the canvas)
     const xPos = (canvasElement.width - boxWidth) / 2;
     const yPos = (canvasElement.height - boxHeight) / 2;
 
-    // Draw the box on the canvas (above the video frame)
-    canvasCtx.strokeStyle = '#FFFFFF';  // Box color (white)
+    canvasCtx.strokeStyle = '#FFFFFF';  
     canvasCtx.lineWidth = 5;
     canvasCtx.strokeRect(xPos, yPos, boxWidth, boxHeight);
 }
 
-// Initialize the Hands solution
 const hands = new Hands({
     locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`,
 });
@@ -63,10 +58,9 @@ hands.onResults((results) => {
     canvasCtx.scale(-1, 1);
     canvasCtx.translate(-canvasElement.width, 0);
 
-    // Draw the video frame first
+
     canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
 
-    // Draw the 1920x1080 box on top of the video frame
     drawBox();
 
     if (results.multiHandLandmarks) {
@@ -104,11 +98,7 @@ hands.onResults((results) => {
 
             prevIncenter = updatedIncenter;
 
-            // console.log(updatedIncenter);
-
-            let handcoordinates=[updatedIncenter[0]-640, updatedIncenter[1]-480]
-            // console.log(handcoordinates);
-            
+            let handcoordinates=[updatedIncenter[0]-640, updatedIncenter[1]-480]            
         }
     }
 
