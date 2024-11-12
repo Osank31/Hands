@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,18 +10,17 @@
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils"></script>
 </head>
 <style>
-     #inputVideo{
+    #inputVideo {
         display: none;
     }
-        /*
-    #outputCanvas{
-        width: 640px;
-        height: 480px;
-    } */
 </style>
+
 <body>
-    <video id="inputVideo" autoplay playsinline></video>
-    <canvas id="outputCanvas"></canvas>
-    <script src="script.js" type="module"></script>
+    <div>
+        <video id="inputVideo" autoplay playsinline></video>
+        <canvas id="outputCanvas"></canvas>
+    </div>
 </body>
+<script src="script.js" type="module"></script>
+
 </html>

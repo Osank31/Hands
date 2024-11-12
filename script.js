@@ -8,11 +8,9 @@ canvasElement.height = 1080;
 function drawBox() {
     const boxWidth = 640;
     const boxHeight = 480;
-
     const xPos = (canvasElement.width - boxWidth) / 2;
     const yPos = (canvasElement.height - boxHeight) / 2;
-
-    canvasCtx.strokeStyle = '#FFFFFF';  
+    canvasCtx.strokeStyle = '#FFFFFF';
     canvasCtx.lineWidth = 5;
     canvasCtx.strokeRect(xPos, yPos, boxWidth, boxHeight);
 }
@@ -28,45 +26,44 @@ hands.setOptions({
     minTrackingConfidence: 0.5,
 });
 
+const camera = new Camera(videoElement, {
+    onFrame: async () => {
+        await hands.send({ image: videoElement });
+    },
+    width: 1280,
+    height: 720,
+});
+
 function getInCenter(lmList) {
-    let x1 = lmList[0][1];
-    let y1 = lmList[0][2];
-
-    let x2 = lmList[5][1];
-    let y2 = lmList[5][2];
-
-    let x3 = lmList[5][1];
-    let y3 = lmList[5][2];
+    let x1 = lmList[0][1], y1 = lmList[0][2];
+    let x2 = lmList[5][1], y2 = lmList[5][2];
+    let x3 = lmList[5][1], y3 = lmList[5][2];
 
     let a = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
     let b = Math.sqrt((x2 - x3) ** 2 + (y2 - y3) ** 2);
     let c = Math.sqrt((x1 - x3) ** 2 + (y1 - y3) ** 2);
 
-    let incenter = [
+    return [
         (a * x1 + b * x2 + c * x3) / (a + b + c),
         (a * y1 + b * y2 + c * y3) / (a + b + c),
     ];
-    return incenter;
 }
 
 let prevIncenter = [0, 0];
+const image = document.querySelector("img");
+image.style.position = "absolute";
 
 hands.onResults((results) => {
     canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
-
     canvasCtx.save();
     canvasCtx.scale(-1, 1);
     canvasCtx.translate(-canvasElement.width, 0);
-
-
     canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
-
     drawBox();
 
     if (results.multiHandLandmarks) {
         for (let handIndex = 0; handIndex < results.multiHandLandmarks.length; handIndex++) {
             const landmarks = results.multiHandLandmarks[handIndex];
-
             let lmList = [];
 
             drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS, { color: '#00FF00', lineWidth: 10 });
@@ -81,7 +78,6 @@ hands.onResults((results) => {
 
             let incenter = getInCenter(lmList);
             const threshold = 50;
-
             let updatedIncenter = [...incenter];
 
             if (Math.abs(incenter[0] - prevIncenter[0]) > threshold) {
@@ -97,20 +93,10 @@ hands.onResults((results) => {
             }
 
             prevIncenter = updatedIncenter;
-
-            let handcoordinates=[updatedIncenter[0]-640, updatedIncenter[1]-480]            
         }
     }
 
     canvasCtx.restore();
 });
 
-const camera = new Camera(videoElement, {
-    onFrame: async () => {
-        await hands.send({ image: videoElement });
-    },
-    width: 1280,
-    height: 720,
-});
-
-camera.start();
+// camera.start();
