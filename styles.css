@@ -1,0 +1,20 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+#inputVideo {
+    display: none;
+}
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+.hidden{
+    display: none;
+}
+#gameCanvas{
+    border: 5px solid black;
+}
+

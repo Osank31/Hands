@@ -5,35 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mediapipe Hands Demo</title>
+    <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils"></script>
 </head>
-<style>
-    *{
-        margin: 0;
-        padding: 0;
-    }
-    #inputVideo {
-        display: none;
-    }
-    .hidden{
-        display: none;
-    }
-    .gameArea{
-        border: 2px solid black;
-        height: 1080px;
-        width: 1920px;
-        overflow: hidden;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-    }
-    #gameCanvas{
-        border: 5px solid black;
-    }
-</style>
 
 <body>
     <div class="gameArea">
