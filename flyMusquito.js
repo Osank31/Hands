@@ -8,7 +8,7 @@ gameCanvas.addEventListener('click', function(event) {
     clickCoordinates={x,y};
 });
 
-export function flyMusquito(gameCanvas, gameCanvasCtx, noOfMusquitoes) {
+export function flyMusquito(gameCanvas, gameCanvasCtx,musquitoImage, noOfMusquitoes) {
     let musquitoes = [];
     for (let i = 0; i < noOfMusquitoes; i++) {
         let startPoint = { x: 0, y: 0 };
@@ -53,15 +53,18 @@ export function flyMusquito(gameCanvas, gameCanvasCtx, noOfMusquitoes) {
                 moveY: musquito.speed * (musquito.distanceY / Math.sqrt(musquito.distanceX * musquito.distanceX + musquito.distanceY * musquito.distanceY))
             };
             
-            if ((musquito.currentPostion.x - musquito.endPoint.x) <= 0 || (musquito.currentPostion.y - musquito.endPoint.y) <= 0) {
-                musquito.currentPostion.x = musquito.currentPostion.x + moveX;
-                musquito.currentPostion.y = musquito.currentPostion.y + moveY;
+            if (
+                Math.abs(musquito.currentPostion.x - musquito.endPoint.x) > musquito.speed || 
+                Math.abs(musquito.currentPostion.y - musquito.endPoint.y) > musquito.speed
+            ) {
+                musquito.currentPostion.x += moveX;
+                musquito.currentPostion.y += moveY;
                 gameCanvasCtx.drawImage(musquitoImage, musquito.currentPostion.x, musquito.currentPostion.y, 200, 200);
             }
             if (clickCoordinates) {
                 if (
-                    clickCoordinates.x >= musquito.currentPostion.x && clickCoordinates.x <= musquito.currentPostion.x + 200 &&
-                    clickCoordinates.y >= musquito.currentPostion.y && clickCoordinates.y <= musquito.currentPostion.y + 200
+                    clickCoordinates.x >= musquito.currentPostion.x && clickCoordinates.x <= musquito.currentPostion.x + 150 &&
+                    clickCoordinates.y >= musquito.currentPostion.y && clickCoordinates.y <= musquito.currentPostion.y + 150
                 ) {
                     musquitoes.splice(index, 1);
                 }
