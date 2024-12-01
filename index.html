@@ -13,14 +13,33 @@
     #inputVideo {
         display: none;
     }
+    .hidden{
+        display: none;
+    }
+    .gameArea{
+        border: 2px solid black;
+        height: 1080px;
+        width: 1920px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+    }
+    #gameCanvas{
+        border: 5px solid black;
+    }
 </style>
 
 <body>
-    <div>
-        <video id="inputVideo" autoplay playsinline></video>
-        <canvas id="outputCanvas"></canvas>
+    <div class="gameArea">
+        <img class="hidden" src="./uploads/pngtree-cartoon-mosquito-png-image_4031335-removebg-preview.png" alt="" id="musquitoImage">
+        <canvas width="640" height="480" id="gameCanvas"></canvas>
     </div>
+        <!-- <video id="inputVideo" autoplay playsinline></video>
+        <canvas id="outputCanvas" width="640" height="480"></canvas> -->
 </body>
-<script src="script.js" type="module"></script>
+<script src="game.js"></script>
+<!-- <script src="script.js" type="module"></script> -->
 
 </html>
