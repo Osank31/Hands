@@ -44,7 +44,10 @@ ms.click = function (lmList, results, positionCoordinates) {
 
         clickCoordinates={x: flippedX, y: adjustedY};
         console.log(clickCoordinates)
+    }
+    else{
 
+        clickCoordinates=null
     }
 };
 
@@ -110,14 +113,12 @@ export function flyMusquito(gameCanvas, gameCanvasCtx, musquitoImage, noOfMusqui
             }
             if (clickCoordinates) {
                 if (
-                    clickCoordinates.x >= musquito.currentPostion.x && clickCoordinates.x <= musquito.currentPostion.x + 150 &&
-                    clickCoordinates.y >= musquito.currentPostion.y && clickCoordinates.y <= musquito.currentPostion.y + 150
+                    clickCoordinates.x >= musquito.currentPostion.x-200 && clickCoordinates.x <= musquito.currentPostion.x + 200 &&
+                    clickCoordinates.y >= musquito.currentPostion.y-200 && clickCoordinates.y <= musquito.currentPostion.y + 200
                 ) {
                     musquitoes.splice(index, 1);
                 }
             }
         });
-
-
     }, 41.6667)
 }
