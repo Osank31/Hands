@@ -1,7 +1,6 @@
 let clickCoordinates=null;
 
 gameCanvas.addEventListener('click', function(event) {
-    // Get the coordinates of the click relative to the canvas
     const rect = gameCanvas.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;

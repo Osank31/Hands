@@ -11,6 +11,7 @@ class MediapipeHands {
         this.prevIncenter = [0, 0];
         this.openHandImage = openHandImage;
         this.closedHamdImage=closedHamdImage;
+        this.isClosed=false;
     }
 
     drawBox() {
@@ -22,6 +23,28 @@ class MediapipeHands {
         this.canvasCtx.lineWidth = 5;
         this.canvasCtx.strokeRect(xPos, yPos, boxWidth, boxHeight);
     }
+
+    click(lmList, results, positionCoordinates) {
+        const handState = this.isHandClosed(lmList, results); // Cache the result
+        let click = false;
+    
+        if (!this.isClosed && handState === "HandClosed") {
+            this.isClosed = true;
+            click = true;
+        } else if (this.isClosed && handState === "HandOpen") {
+            this.isClosed = false;
+            click = false;
+        }
+    
+        // Log click events for debugging
+        // console.log("Hand State:", handState);
+        console.log("Click:", click);
+    
+        if (click) {
+            console.log("Click detected", positionCoordinates);
+        }
+    }
+    
 
     assessHandPlacement(positionCoordinates, lmList, results) {
         const originalXMin = 320, originalXMax = 1500;
@@ -49,7 +72,6 @@ class MediapipeHands {
         let ringFinger = false;
         let littleFinger = false;
         let thumb = false;
-        // console.log(lmList)
     
         let label = this.getHandedness(results);
         if (lmList.length !== 0) {
@@ -157,6 +179,7 @@ class MediapipeHands {
                     // console.log(this.isHandClosed(lmList, results));
                     
                     this.assessHandPlacement(positionCoordinates, lmList, results)
+                    this.click(lmList,results, positionCoordinates);
                     drawConnectors(this.canvasCtx, this.landmarks, HAND_CONNECTIONS, { color: '#00FF00', lineWidth: 10 });
                     drawLandmarks(this.canvasCtx, this.landmarks, { color: '#FF0000', lineWidth: 0.5 });
                 }
