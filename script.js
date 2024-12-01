@@ -10,8 +10,9 @@ gameCanvas.width = 1280;
 gameCanvas.height = 720;
 const musquitoImage = document.getElementById("musquitoImage");
 const openHandImage = document.getElementById("openHand")
+const closedHandImage=document.getElementById("closedHand");
 
-const ms = new MediapipeHands(videoElement, canvasElement, openHandImage, gameCanvas, gameCanvasCtx);
+const ms = new MediapipeHands(videoElement, canvasElement, openHandImage,closedHandImage, gameCanvas, gameCanvasCtx);
 ms.initialize()
 
 let clickCoordinates=null;

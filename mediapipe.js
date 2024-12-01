@@ -1,5 +1,5 @@
 class MediapipeHands {
-    constructor(videoElement, canvasElement, openHandImage, gameCanvas, gameCanvasCtx) {
+    constructor(videoElement, canvasElement, openHandImage,closedHamdImage, gameCanvas, gameCanvasCtx) {
         this.videoElement = videoElement;
         this.canvasElement = canvasElement;
         this.canvasCtx = this.canvasElement.getContext("2d");
@@ -10,6 +10,7 @@ class MediapipeHands {
         this.landmarks = null;
         this.prevIncenter = [0, 0];
         this.openHandImage = openHandImage;
+        this.closedHamdImage=closedHamdImage;
     }
 
     drawBox() {
@@ -22,7 +23,7 @@ class MediapipeHands {
         this.canvasCtx.strokeRect(xPos, yPos, boxWidth, boxHeight);
     }
 
-    assessHandPlacement(positionCoordinates) {
+    assessHandPlacement(positionCoordinates, lmList, results) {
         const originalXMin = 320, originalXMax = 1500;
         const originalYMin = 120, originalYMax = 960;
 
@@ -37,9 +38,66 @@ class MediapipeHands {
         adjustedY = ((adjustedY - originalYMin) / (originalYMax - originalYMin)) * (targetYMax - targetYMin);
         const flippedX = this.gameCanvas.width - adjustedX;
 
-        this.gameCanvasCtx.drawImage(this.openHandImage, flippedX, adjustedY);
+        const image = ((this.isHandClosed(lmList, results)=="HandOpen")?this.openHandImage:this.closedHamdImage)
+        this.gameCanvasCtx.drawImage(image, flippedX, adjustedY);
     }
 
+    isHandClosed(lmList, results) {
+        let answer = "HandOpen";
+        let indexFinger = false;
+        let middleFinger = false;
+        let ringFinger = false;
+        let littleFinger = false;
+        let thumb = false;
+        // console.log(lmList)
+    
+        let label = this.getHandedness(results);
+        if (lmList.length !== 0) {
+            // Check index finger
+            if (lmList[8][2] > lmList[5][2]) {
+                indexFinger = true;
+            }
+            // Check middle finger
+            if (lmList[12][2] > lmList[9][2]) {
+                middleFinger = true;
+            }
+            // Check ring finger
+            if (lmList[16][2] > lmList[13][2]) {
+                ringFinger = true;
+            }
+            // Check little finger
+            if (lmList[20][2] > lmList[17][2]) {
+                littleFinger = true;
+            }
+            // Check thumb based on handedness
+            if (label === "Right") {
+                if (lmList[4][1] < lmList[2][1]) {
+                    thumb = true;
+                }
+            } else if (label === "Left") {
+                if (lmList[4][1] > lmList[2][1]) {
+                    thumb = true;
+                }
+            }
+    
+            // If all fingers are folded, the hand is closed
+            if (indexFinger && middleFinger && ringFinger && littleFinger && thumb) {
+                answer = "HandClosed";
+            }
+        }
+    
+        return answer;
+    }
+    
+
+    getHandedness(results){
+        if(results.multiHandedness){
+            let label = results.multiHandedness[0].label;
+            if(label=="Right")
+                return "Left";
+            return "Right"
+        }
+    }
 
     getInCenter(lmList) {
         let x1 = lmList[0][1], y1 = lmList[0][2];
@@ -85,7 +143,6 @@ class MediapipeHands {
             this.canvasCtx.translate(-this.canvasElement.width, 0);
             this.canvasCtx.drawImage(results.image, 0, 0, this.canvasElement.width, this.canvasElement.height);
             if (results.multiHandLandmarks) {
-
                 for (let handIndex = 0; handIndex < results.multiHandLandmarks.length; handIndex++) {
                     this.landmarks = results.multiHandLandmarks[handIndex];
                     let lmList = [];
@@ -96,8 +153,10 @@ class MediapipeHands {
                         lmList.push([index, x, y, z]);
                     });
                     let positionCoordinates = this.getInCenter(lmList);
-                    console.log(positionCoordinates)
-                    this.assessHandPlacement(positionCoordinates)
+                    // console.log(this.getHandedness(results));
+                    // console.log(this.isHandClosed(lmList, results));
+                    
+                    this.assessHandPlacement(positionCoordinates, lmList, results)
                     drawConnectors(this.canvasCtx, this.landmarks, HAND_CONNECTIONS, { color: '#00FF00', lineWidth: 10 });
                     drawLandmarks(this.canvasCtx, this.landmarks, { color: '#FF0000', lineWidth: 0.5 });
                 }
