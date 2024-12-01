@@ -24,26 +24,26 @@ class MediapipeHands {
         this.canvasCtx.strokeRect(xPos, yPos, boxWidth, boxHeight);
     }
 
-    click(lmList, results, positionCoordinates) {
-        const handState = this.isHandClosed(lmList, results); // Cache the result
-        let click = false;
+    // click(lmList, results, positionCoordinates) {
+    //     const handState = this.isHandClosed(lmList, results); // Cache the result
+    //     let click = false;
     
-        if (!this.isClosed && handState === "HandClosed") {
-            this.isClosed = true;
-            click = true;
-        } else if (this.isClosed && handState === "HandOpen") {
-            this.isClosed = false;
-            click = false;
-        }
+    //     if (!this.isClosed && handState === "HandClosed") {
+    //         this.isClosed = true;
+    //         click = true;
+    //     } else if (this.isClosed && handState === "HandOpen") {
+    //         this.isClosed = false;
+    //         click = false;
+    //     }
     
-        // Log click events for debugging
-        // console.log("Hand State:", handState);
-        console.log("Click:", click);
+    //     // Log click events for debugging
+    //     // console.log("Hand State:", handState);
+    //     console.log("Click:", click);
     
-        if (click) {
-            console.log("Click detected", positionCoordinates);
-        }
-    }
+    //     if (click) {
+    //         console.log("Click detected", positionCoordinates);
+    //     }
+    // }
     
 
     assessHandPlacement(positionCoordinates, lmList, results) {

@@ -15,6 +15,25 @@ const closedHandImage=document.getElementById("closedHand");
 const ms = new MediapipeHands(videoElement, canvasElement, openHandImage,closedHandImage, gameCanvas, gameCanvasCtx);
 ms.initialize()
 
+ms.click = function (lmList, results, positionCoordinates) {
+    const handState = this.isHandClosed(lmList, results);
+    let click = false;
+
+    if (!this.isClosed && handState === "HandClosed") {
+        this.isClosed = true;
+        click = true;
+    } else if (this.isClosed && handState === "HandOpen") {
+        this.isClosed = false;
+    }
+
+    if (click) {
+        console.log("Click detected at position:", positionCoordinates);
+        //------>
+
+        
+    }
+};
+
 let clickCoordinates=null;
 
 flyMusquito(gameCanvas,gameCanvasCtx,musquitoImage, 5);
