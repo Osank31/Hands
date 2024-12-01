@@ -1,17 +1,17 @@
-let clickCoordinates=null;
+let clickCoordinates = null;
 const videoElement = document.getElementById('inputVideo');
 const canvasElement = document.getElementById('outputCanvas');
-canvasElement.width=1920;
-canvasElement.height=1080;
+canvasElement.width = 1920;
+canvasElement.height = 1080;
 const gameCanvas = document.getElementById("gameCanvas");
 const gameCanvasCtx = gameCanvas.getContext("2d");
 gameCanvas.width = 1280;
 gameCanvas.height = 720;
 const openHandImage = document.getElementById("openHand")
-const closedHandImage=document.getElementById("closedHand");
+const closedHandImage = document.getElementById("closedHand");
 import MediapipeHands from "./mediapipe.js";
 
-const ms = new MediapipeHands(videoElement, canvasElement, openHandImage,closedHandImage, gameCanvas, gameCanvasCtx);
+const ms = new MediapipeHands(videoElement, canvasElement, openHandImage, closedHandImage, gameCanvas, gameCanvasCtx);
 ms.initialize();
 ms.click = function (lmList, results, positionCoordinates) {
     const handState = this.isHandClosed(lmList, results);
@@ -24,25 +24,38 @@ ms.click = function (lmList, results, positionCoordinates) {
         this.isClosed = false;
     }
 
+    const originalXMin = 320, originalXMax = 1500;
+    const originalYMin = 120, originalYMax = 960;
+
+    const targetXMin = 0, targetXMax = 1280;
+    const targetYMin = 0, targetYMax = 720;
+
+    let adjustedX = positionCoordinates[0];
+    adjustedX = Math.max(Math.min(adjustedX, originalXMax), originalXMin);
+    adjustedX = ((adjustedX - originalXMin) / (originalXMax - originalXMin)) * (targetXMax - targetXMin);
+    let adjustedY = positionCoordinates[1];
+    adjustedY = Math.max(Math.min(adjustedY, originalYMax), originalYMin);
+    adjustedY = ((adjustedY - originalYMin) / (originalYMax - originalYMin)) * (targetYMax - targetYMin);
+    const flippedX = this.gameCanvas.width - adjustedX;
+
     if (click) {
-        console.log("Click detected at position:", positionCoordinates);
+        // console.log("Click detected at position:", positionCoordinates);
         //------>
 
-        // clickCoordinates={x: positionCoordinates[0], y: positionCoordinates[1]};
-        // console.log(clickCoordinates)
+        clickCoordinates={x: flippedX, y: adjustedY};
+        console.log(clickCoordinates)
 
     }
 };
 
-gameCanvas.addEventListener('click', function(event) {
+gameCanvas.addEventListener('click', function (event) {
     const rect = gameCanvas.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
-    // clickCoordinates={x,y};
-    console.log(x,y)
+    console.log(x, y)
 });
 
-export function flyMusquito(gameCanvas, gameCanvasCtx,musquitoImage, noOfMusquitoes) {
+export function flyMusquito(gameCanvas, gameCanvasCtx, musquitoImage, noOfMusquitoes) {
     let musquitoes = [];
     for (let i = 0; i < noOfMusquitoes; i++) {
         let startPoint = { x: 0, y: 0 };
@@ -65,10 +78,10 @@ export function flyMusquito(gameCanvas, gameCanvasCtx,musquitoImage, noOfMusquit
         }
         let distanceX = endPoint.x - startPoint.x;
         let distanceY = endPoint.y - startPoint.y;
-        let speed=Math.round(Math.random()*9+1);
+        let speed = Math.round(Math.random() * 9 + 1);
         let currentPostion = { x: startPoint.x - 200, y: startPoint.y - 200 };
 
-        let musquito={
+        let musquito = {
             endPoint,
             currentPostion,
             distanceX,
@@ -86,9 +99,9 @@ export function flyMusquito(gameCanvas, gameCanvasCtx,musquitoImage, noOfMusquit
                 moveX: musquito.speed * (musquito.distanceX / Math.sqrt(musquito.distanceX * musquito.distanceX + musquito.distanceY * musquito.distanceY)),
                 moveY: musquito.speed * (musquito.distanceY / Math.sqrt(musquito.distanceX * musquito.distanceX + musquito.distanceY * musquito.distanceY))
             };
-            
+
             if (
-                Math.abs(musquito.currentPostion.x - musquito.endPoint.x) > musquito.speed || 
+                Math.abs(musquito.currentPostion.x - musquito.endPoint.x) > musquito.speed ||
                 Math.abs(musquito.currentPostion.y - musquito.endPoint.y) > musquito.speed
             ) {
                 musquito.currentPostion.x += moveX;
@@ -104,7 +117,7 @@ export function flyMusquito(gameCanvas, gameCanvasCtx,musquitoImage, noOfMusquit
                 }
             }
         });
-        
+
 
     }, 41.6667)
 }

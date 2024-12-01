@@ -23,27 +23,6 @@ class MediapipeHands {
         this.canvasCtx.lineWidth = 5;
         this.canvasCtx.strokeRect(xPos, yPos, boxWidth, boxHeight);
     }
-
-    // click(lmList, results, positionCoordinates) {
-    //     const handState = this.isHandClosed(lmList, results); // Cache the result
-    //     let click = false;
-    
-    //     if (!this.isClosed && handState === "HandClosed") {
-    //         this.isClosed = true;
-    //         click = true;
-    //     } else if (this.isClosed && handState === "HandOpen") {
-    //         this.isClosed = false;
-    //         click = false;
-    //     }
-    
-    //     // Log click events for debugging
-    //     // console.log("Hand State:", handState);
-    //     console.log("Click:", click);
-    
-    //     if (click) {
-    //         console.log("Click detected", positionCoordinates);
-    //     }
-    // }
     
 
     assessHandPlacement(positionCoordinates, lmList, results) {
@@ -75,23 +54,18 @@ class MediapipeHands {
     
         let label = this.getHandedness(results);
         if (lmList.length !== 0) {
-            // Check index finger
             if (lmList[8][2] > lmList[5][2]) {
                 indexFinger = true;
             }
-            // Check middle finger
             if (lmList[12][2] > lmList[9][2]) {
                 middleFinger = true;
             }
-            // Check ring finger
             if (lmList[16][2] > lmList[13][2]) {
                 ringFinger = true;
             }
-            // Check little finger
             if (lmList[20][2] > lmList[17][2]) {
                 littleFinger = true;
             }
-            // Check thumb based on handedness
             if (label === "Right") {
                 if (lmList[4][1] < lmList[2][1]) {
                     thumb = true;
@@ -101,8 +75,6 @@ class MediapipeHands {
                     thumb = true;
                 }
             }
-    
-            // If all fingers are folded, the hand is closed
             if (indexFinger && middleFinger && ringFinger && littleFinger && thumb) {
                 answer = "HandClosed";
             }
