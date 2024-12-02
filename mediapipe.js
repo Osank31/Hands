@@ -147,8 +147,6 @@ class MediapipeHands {
                         lmList.push([index, x, y, z]);
                     });
                     let positionCoordinates = this.getInCenter(lmList);
-                    // console.log(this.getHandedness(results));
-                    // console.log(this.isHandClosed(lmList, results));
                     
                     this.assessHandPlacement(positionCoordinates, lmList, results)
                     this.click(lmList,results, positionCoordinates);
