@@ -1,5 +1,5 @@
 class MediapipeHands {
-    constructor(videoElement, canvasElement, openHandImage,closedHamdImage, gameCanvas, gameCanvasCtx) {
+    constructor(videoElement, canvasElement, openHandImage,closedHandImage, gameCanvas, gameCanvasCtx) {
         this.videoElement = videoElement;
         this.canvasElement = canvasElement;
         this.canvasCtx = this.canvasElement.getContext("2d");
@@ -10,7 +10,7 @@ class MediapipeHands {
         this.landmarks = null;
         this.prevIncenter = [0, 0];
         this.openHandImage = openHandImage;
-        this.closedHamdImage=closedHamdImage;
+        this.closedHandImage=closedHandImage;
         this.isClosed=false;
     }
 
@@ -40,7 +40,7 @@ class MediapipeHands {
         adjustedY = ((adjustedY - originalYMin) / (originalYMax - originalYMin)) * (targetYMax - targetYMin);
         const flippedX = this.gameCanvas.width - adjustedX;
 
-        const image = ((this.isHandClosed(lmList, results)=="HandOpen")?this.openHandImage:this.closedHamdImage)
+        const image = ((this.isHandClosed(lmList, results)=="HandOpen")?this.openHandImage:this.closedHandImage)
         this.gameCanvasCtx.drawImage(image, flippedX, adjustedY);
     }
 

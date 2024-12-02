@@ -1,4 +1,4 @@
-let clickCoordinates = null;
+import MediapipeHands from "./mediapipe.js";
 const videoElement = document.getElementById('inputVideo');
 const canvasElement = document.getElementById('outputCanvas');
 canvasElement.width = 1920;
@@ -9,7 +9,7 @@ gameCanvas.width = 1280;
 gameCanvas.height = 720;
 const openHandImage = document.getElementById("openHand")
 const closedHandImage = document.getElementById("closedHand");
-import MediapipeHands from "./mediapipe.js";
+let clickCoordinates = null;
 
 const ms = new MediapipeHands(videoElement, canvasElement, openHandImage, closedHandImage, gameCanvas, gameCanvasCtx);
 ms.initialize();
@@ -39,14 +39,10 @@ ms.click = function (lmList, results, positionCoordinates) {
     const flippedX = this.gameCanvas.width - adjustedX;
 
     if (click) {
-        // console.log("Click detected at position:", positionCoordinates);
-        //------>
-
         clickCoordinates={x: flippedX, y: adjustedY};
         console.log(clickCoordinates)
     }
     else{
-
         clickCoordinates=null
     }
 };
