@@ -6,13 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mediapipe Hands Demo</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils"></script> -->
 </head>
 
 <body>
-    <div class="gameArea">
+    <button>Lets Play</button>
+    <div class="gameArea" style="display: none;">
         <img class="hidden" src="./uploads/pngtree-cartoon-mosquito-png-image_4031335-removebg-preview.png" alt=""
             id="musquitoImage">
         <img src="./uploads/open_hand-removebg-preview.png" alt="" class="hidden" id="openHand">
@@ -22,6 +23,6 @@
     <video id="inputVideo" autoplay playsinline></video>
     <canvas id="outputCanvas" class="hidden" width="1280" height="720"></canvas>
 </body>
-<script src="script.js" type="module"></script>
+<script src="app.js"></script>
 
 </html>
