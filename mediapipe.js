@@ -1,5 +1,5 @@
 class MediapipeHands {
-    constructor(videoElement, canvasElement, openHandImage,closedHandImage, gameCanvas, gameCanvasCtx) {
+    constructor(videoElement, canvasElement, openHandImage, closedHandImage, gameCanvas, gameCanvasCtx) {
         this.videoElement = videoElement;
         this.canvasElement = canvasElement;
         this.canvasCtx = this.canvasElement.getContext("2d");
@@ -10,8 +10,11 @@ class MediapipeHands {
         this.landmarks = null;
         this.prevIncenter = [0, 0];
         this.openHandImage = openHandImage;
-        this.closedHandImage=closedHandImage;
-        this.isClosed=false;
+        this.closedHandImage = closedHandImage;
+        this.isClosed = false;
+        this.positionCoordinates=null;
+        this.lmList=null;
+        this.results=null;
     }
 
     drawBox() {
@@ -24,26 +27,6 @@ class MediapipeHands {
         this.canvasCtx.strokeRect(xPos, yPos, boxWidth, boxHeight);
     }
     
-
-    assessHandPlacement(positionCoordinates, lmList, results) {
-        const originalXMin = 320, originalXMax = 1500;
-        const originalYMin = 120, originalYMax = 960;
-
-        const targetXMin = 0, targetXMax = 1280;
-        const targetYMin = 0, targetYMax = 720;
-
-        let adjustedX = positionCoordinates[0];
-        adjustedX = Math.max(Math.min(adjustedX, originalXMax), originalXMin);
-        adjustedX = ((adjustedX - originalXMin) / (originalXMax - originalXMin)) * (targetXMax - targetXMin);
-        let adjustedY = positionCoordinates[1];
-        adjustedY = Math.max(Math.min(adjustedY, originalYMax), originalYMin);
-        adjustedY = ((adjustedY - originalYMin) / (originalYMax - originalYMin)) * (targetYMax - targetYMin);
-        const flippedX = this.gameCanvas.width - adjustedX;
-
-        const image = ((this.isHandClosed(lmList, results)=="HandOpen")?this.openHandImage:this.closedHandImage)
-        this.gameCanvasCtx.drawImage(image, flippedX, adjustedY);
-    }
-
     isHandClosed(lmList, results) {
         let answer = "HandOpen";
         let indexFinger = false;
@@ -51,7 +34,7 @@ class MediapipeHands {
         let ringFinger = false;
         let littleFinger = false;
         let thumb = false;
-    
+
         let label = this.getHandedness(results);
         if (lmList.length !== 0) {
             if (lmList[8][2] > lmList[5][2]) {
@@ -79,15 +62,15 @@ class MediapipeHands {
                 answer = "HandClosed";
             }
         }
-    
+
         return answer;
     }
-    
 
-    getHandedness(results){
-        if(results.multiHandedness){
+
+    getHandedness(results) {
+        if (results.multiHandedness) {
             let label = results.multiHandedness[0].label;
-            if(label=="Right")
+            if (label == "Right")
                 return "Left";
             return "Right"
         }
@@ -147,9 +130,12 @@ class MediapipeHands {
                         lmList.push([index, x, y, z]);
                     });
                     let positionCoordinates = this.getInCenter(lmList);
-                    
-                    this.assessHandPlacement(positionCoordinates, lmList, results)
-                    this.click(lmList,results, positionCoordinates);
+                    this.positionCoordinates=positionCoordinates;
+                    this.lmList=lmList;
+                    this.results=results;
+
+                    // this.assessHandPlacement(positionCoordinates, lmList, results)
+                    this.click(lmList, results, positionCoordinates);
                     drawConnectors(this.canvasCtx, this.landmarks, HAND_CONNECTIONS, { color: '#00FF00', lineWidth: 10 });
                     drawLandmarks(this.canvasCtx, this.landmarks, { color: '#FF0000', lineWidth: 0.5 });
                 }
@@ -159,6 +145,13 @@ class MediapipeHands {
         this.canvasCtx.restore();
 
         this.camera.start();
+    }
+    getCoordinateInfo(){
+        return {
+            positionCoordinates: this.positionCoordinates,
+            lmList: this.lmList,
+            results: this.results
+        };
     }
 }
 

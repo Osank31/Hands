@@ -9,4 +9,5 @@ gameCanvas.height = 720;
 const musquitoImage = document.getElementById("musquitoImage")
 
 
-flyMusquito(gameCanvas,gameCanvasCtx,musquitoImage, 5);
+// flyMusquito(gameCanvas,gameCanvasCtx,musquitoImage);
+flyMusquito(gameCanvas,gameCanvasCtx,musquitoImage, 5, 0)
